@@ -28,24 +28,37 @@ def main():
             if sync == 'on':
                 window.set_window_option('synchronize-panes', 'off')
             counter = starting_value
-            i = 1
-            for pane in window.panes:
-                # find and replace N with the counter value
-                output = string_to_send.replace('N', str(counter))
-                pane.send_keys(output, enter=False)
-                counter += 1 if not fixed_repeat else 0
-                if i == npanes:
-                    if fixed_repeat:
-                        counter += 1
-                    else:
+            if fixed_repeat:
+                broadcast_fixed_repitition(window.panes, string_to_send, starting_value, fixed_repeat)
+            else: 
+                i = 1
+                for pane in window.panes:
+                    # find and replace N with the counter value
+                    output = string_to_send.replace('N', str(counter))
+                    pane.send_keys(output, enter=False)
+                    counter += 1
+                    if i == npanes:
                         counter = starting_value
-                    i = 0
-                else:
-                    i += 1
+                        i = 0
+                    else:
+                        i += 1
             # restore synchronization
             if sync == 'on':
                 window.set_window_option('synchronize-panes', 'on')
             break
+
+
+def broadcast_fixed_repitition(panes, string_to_send, starting_value, panes_per_row):
+    i = 0
+    counter = starting_value
+    for pane in panes:
+        output = string_to_send.replace('N', str(counter))
+        pane.send_keys(output, enter=False)
+        i += 1
+        if i == panes_per_row:
+            counter += 1
+            i = 0
+    pass
 
 if __name__ == '__main__':
     main()
