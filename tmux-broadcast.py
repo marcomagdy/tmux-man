@@ -1,16 +1,22 @@
 import libtmux
-import sys
+import argparse
 
-#Take the input as arguments to the script
+# Take the input as arguments to the script
 def main():
-    if len(sys.argv) != 5:
-        print("Usage: %s <window-name> <string with N> <starting N value> <max repeat>" % sys.argv[0])
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Broadcast a string to tmux panes with variable substitution.')
+    parser.add_argument('-w','--window-name', type=str, help='Name of the tmux window')
+    parser.add_argument('-s', '--starting-value', type=int, help='Starting value for N that increments for each pane')
+    parser.add_argument('-r', '--fixed-repeat', type=int, help='Repeat the string (without incrementing N) for this number of panes, then increment N')
+    parser.add_argument('-p', '--number-of-panes', type=int, help='Increment the starting value up to this number of panes')
+    parser.add_argument('string_to_send', type=str, help='String to send to the panes')
 
-    window_name = sys.argv[1]
-    string = sys.argv[2]
-    starting_value = int(sys.argv[3])
-    max_repeat = int(sys.argv[4])
+    args = parser.parse_args()
+
+    window_name = args.window_name
+    string_to_send = args.string_to_send
+    starting_value = args.starting_value
+    npanes = args.number_of_panes
+    fixed_repeat = args.fixed_repeat
 
     server = libtmux.Server()
     for session in server.attached_sessions:
@@ -25,11 +31,14 @@ def main():
             i = 1
             for pane in window.panes:
                 # find and replace N with the counter value
-                output = string.replace('N', str(counter))
+                output = string_to_send.replace('N', str(counter))
                 pane.send_keys(output, enter=False)
-                counter += 1
-                if i == max_repeat:
-                    counter = starting_value
+                counter += 1 if not fixed_repeat else 0
+                if i == npanes:
+                    if fixed_repeat:
+                        counter += 1
+                    else:
+                        counter = starting_value
                     i = 0
                 else:
                     i += 1
