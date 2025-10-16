@@ -1,3 +1,56 @@
+function new-window32() {
+# Create a new tmux window split into 32 panes; 8 panes in each of 4 rows
+    tmux new-window \; \
+        split-window -v \; \
+        split-window -v \; \
+        select-pane -t 0\; \
+        split-window -v \; \
+        select-pane -t 0\; \
+        split-window -h \; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 1\; \
+        split-window -h \; \
+        select-pane -t 0\; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 0\; \
+        split-window -h \; \
+        select-pane -t 8\; \
+        split-window -h \; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 9\; \
+        split-window -h \; \
+        select-pane -t 8\; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 8\; \
+        split-window -h \;\
+        select-pane -t 16\; \
+        split-window -h \; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 17\; \
+        split-window -h \; \
+        select-pane -t 16\; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 16\; \
+        split-window -h \; \
+        select-pane -t 24\; \
+        split-window -h \; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 25\; \
+        split-window -h \; \
+        select-pane -t 24\; \
+        split-window -h \; \
+        split-window -h \; \
+        select-pane -t 24\; \
+        split-window -h \;
+}
+
 function new-window16() {
 # Create a new tmux window split into 16-panes; 8 at the top and 8 at the bottom
     tmux new-window \; \
