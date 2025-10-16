@@ -39,7 +39,7 @@ def main():
                     counter += 1
                     if i == npanes:
                         counter = starting_value
-                        i = 0
+                        i = 1
                     else:
                         i += 1
             # restore synchronization
