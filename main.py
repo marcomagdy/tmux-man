@@ -24,13 +24,14 @@ def main():
             if window.name != target_window:
                 continue
             # turn off synchronization
-            sync = window.show_window_option('synchronize-panes')
-            if sync == 'on':
-                window.set_window_option('synchronize-panes', 'off')
+            sync = window.show_option('synchronize-panes')
+            print(f"Current pane synchronization is: {sync}")
+            if sync == True:
+                window.set_option('synchronize-panes', 'off')
             counter = start_value
             if group_size:
                 broadcast_with_grouping(window.panes, string_to_send, start_value, group_size)
-            else: 
+            else:
                 i = 1
                 for pane in window.panes:
                     # find and replace N with the counter value
@@ -43,8 +44,8 @@ def main():
                     else:
                         i += 1
             # restore synchronization
-            if sync == 'on':
-                window.set_window_option('synchronize-panes', 'on')
+            if sync == True:
+                window.set_option('synchronize-panes', 'on')
             break
 
 
