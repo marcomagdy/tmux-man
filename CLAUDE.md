@@ -5,39 +5,70 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 tmux-man is a tmux automation toolkit with two main utilities:
-1. **tmux-broadcast.py** - Python script for broadcasting commands to tmux panes with variable substitution
+1. **main.py** - Python script for broadcasting commands to tmux panes with variable substitution
 2. **new-window.sh** - Shell functions for creating tmux windows with predefined pane layouts
+
+## Running the Project
+
+This project uses `uv` for dependency management. First, install the package in editable mode:
+
+```bash
+uv pip install -e .
+```
+
+Then run the command with:
+
+```bash
+uv run tmux-man [options] <string_to_send>
+```
 
 ## Architecture
 
-### tmux-broadcast.py
+### main.py (Broadcast Script)
 - Uses `libtmux` Python library for tmux interaction
 - Uses `argparse` for command-line argument parsing
-- Operates on the currently attached tmux session
-- Temporarily disables pane synchronization during broadcast, then restores it
+- Operates on currently attached tmux sessions only
+- Temporarily disables pane synchronization during broadcast, then restores original state
 - Supports two broadcasting modes:
-  - **Incremental mode**: Substitutes 'N' with incrementing counter for each pane
-  - **Fixed repetition mode** (`-r`): Sends same value to multiple panes before incrementing
+  - **Incremental mode** (default): Substitutes 'N' with incrementing counter for each pane
+  - **Group mode** (`-g`): Sends same N value to a group of panes before incrementing
+
+### CLI Arguments
+- `-t/--target`: Name of the tmux window to target
+- `-s/--start`: Starting value for N counter
+- `-c/--cycle`: Reset counter to starting value after this many panes
+- `-g/--group`: Send same N value to this many panes before incrementing
+- `string_to_send`: String to broadcast (use 'N' as placeholder for variable substitution)
 
 ### new-window.sh
-- Provides three bash functions: `new-window4()`, `new-window8()`, `new-window16()`
-- Each creates a tmux window with a specific grid layout (4, 8, or 16 panes)
-- Uses tmux's `split-window` and `select-pane` commands to construct layouts
+Provides bash functions for creating tmux windows with predefined grid layouts:
+- `new-window4()`: Creates 2x2 grid (4 panes)
+- `new-window8()`: Creates 2x4 grid (8 panes)
+- `new-window16()`: Creates 2x8 grid (16 panes)
+- `new-window32()`: Creates 4x8 grid (32 panes)
+
+Each uses tmux's `split-window` and `select-pane` commands to construct the layout.
 
 ## Key Functionality
 
 ### Broadcasting with Variable Substitution
-The broadcast script replaces 'N' in the input string with numeric values:
-- `-s/--starting-value`: Initial value for N
-- `-p/--number-of-panes`: After this many panes, reset counter to starting value
-- `-r/--fixed-repeat`: Send same N value to this many panes before incrementing
-- `-w/--window-name`: Target window by name
+The script replaces 'N' in the input string with numeric values. Examples:
 
-Example: `python tmux-broadcast.py -w mywindow -s 0 -p 4 "export PORT=300N"`
-- Sends `export PORT=3000` to pane 1, `export PORT=3001` to pane 2, etc.
-- After 4 panes, resets to starting value 0
+**Incremental mode with cycling:**
+```bash
+uv run tmux-man -t mywindow -s 1 -c 4 "ssh ncm-N.rsd"
+```
+Sends `ssh ncm-1.rsd`, `ssh ncm-2.rsd`, `ssh ncm-3.rsd`, `ssh ncm-4.rsd`, then wraps back to `ssh ncm-1.rsd`
+
+**Group mode:**
+```bash
+uv run tmux-man -t mywindow -s 1 -g 8 "ssh JN"
+```
+Sends `ssh J1` to first 8 panes, `ssh J2` to next 8 panes, etc.
 
 ## Dependencies
 
-- Python 3 with `libtmux` library
-- tmux (for both scripts)
+- Python 3.12+
+- `uv` package manager
+- `libtmux` library (managed by uv)
+- tmux (system dependency)
