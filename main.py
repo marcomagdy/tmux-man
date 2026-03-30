@@ -8,7 +8,7 @@ def main():
     parser.add_argument('-s', '--start', type=int, help='Starting value for N that increments for each pane')
     parser.add_argument('-g', '--group', type=int, help='Repeat the string (without incrementing N) for this number of panes, then increment N')
     parser.add_argument('-c', '--cycle', type=int, help='Increment the starting value up to this number of panes')
-    parser.add_argument('string_to_send', type=str, help='String to send to the panes')
+    parser.add_argument('string_to_send', type=str, help='String to send to the panes. Use {N} as a placeholder for variable substitution.')
 
     args = parser.parse_args()
 
@@ -35,7 +35,7 @@ def main():
                 i = 1
                 for pane in window.panes:
                     # find and replace N with the counter value
-                    output = string_to_send.replace('N', str(counter))
+                    output = string_to_send.replace('{N}', str(counter))
                     pane.send_keys(output, enter=False)
                     counter += 1
                     if i == cycle_at:
@@ -53,7 +53,7 @@ def broadcast_with_grouping(panes, string_to_send, start_value, group_size):
     i = 0
     counter = start_value
     for pane in panes:
-        output = string_to_send.replace('N', str(counter))
+        output = string_to_send.replace('{N}', str(counter))
         pane.send_keys(output, enter=False)
         i += 1
         if i == group_size:
