@@ -1,0 +1,36 @@
+version = 1
+revision = 3
+requires-python = ">=3.12"
+
+[[package]]
+name = "argparse"
+version = "1.4.0"
+source = { registry = "https://pypi.apple.com/simple" }
+sdist = { url = "https://pypi.apple.com/packages/packages/18/dd/e617cfc3f6210ae183374cd9f6a26b20514bbb5a792af97949c5aacddf0f/argparse-1.4.0.tar.gz", hash = "sha256:62b089a55be1d8949cd2bc7e0df0bddb9e028faefc8c32038cc84862aefdd6e4", size = 70508, upload-time = "2015-09-12T20:22:16.217Z" }
+wheels = [
+    { url = "https://pypi.apple.com/packages/packages/f2/94/3af39d34be01a24a6e65433d19e107099374224905f1e0cc6bbe1fd22a2f/argparse-1.4.0-py2.py3-none-any.whl", hash = "sha256:c31647edb69fd3d465a847ea3157d37bed1f95f19760b11a47aa91c04b666314", size = 23000, upload-time = "2015-09-14T16:03:16.137Z" },
+]
+
+[[package]]
+name = "libtmux"
+version = "0.55.0"
+source = { registry = "https://pypi.apple.com/simple" }
+sdist = { url = "https://pypi.apple.com/packages/packages/f7/85/99932ac9ddb90821778f8cabe32b81bbbec280dd1a14a457c512693fb11b/libtmux-0.55.0.tar.gz", hash = "sha256:cdc4aa564b2325618d73d57cb0d7d92475d02026dba2b96a94f87ad328e7e79d", size = 420859, upload-time = "2026-03-08T00:57:55.788Z" }
+wheels = [
+    { url = "https://pypi.apple.com/packages/packages/8b/34/b11ab24abb78c73a1b82f6471c2d71bdd1bf2c8f30768ed2f26f1dddc083/libtmux-0.55.0-py3-none-any.whl", hash = "sha256:4b746533856e022c759e5c5cae97f4932e85dae316a2afd4391d6d0e891d6ab8", size = 80094, upload-time = "2026-03-08T00:57:54.141Z" },
+]
+
+[[package]]
+name = "tmux-man"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "argparse" },
+    { name = "libtmux" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "argparse" },
+    { name = "libtmux" },
+]
